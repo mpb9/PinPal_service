@@ -4,44 +4,60 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.bb.places.model.Map;
 import com.bb.places.repository.MapRepository;
 
+import jakarta.validation.Valid;
+
 @Service
+@Validated
 public class MapService {
 
 	@Autowired
-	MapRepository mapRepository;
+	private MapRepository mapRepository;
 
 	public List<Map> getAllMaps() {
-		return mapRepository.findAll();
+		return mapRepository.findAllByOrderById();
 	}
 
-	public Map getMapById(Integer id) {
+	public List<Map> getPublicMaps() {
+		return mapRepository.findByPblc(1);
+	}
+
+	public Map getMapById(int id) {
 		return mapRepository.findById(id).get();
 	}
 
-	public void createMap(Map map) {
-		mapRepository.save(map);
+	public List<Map> getAllMapsByUserId(String userId) {
+		return mapRepository.findByUserId(userId);
 	}
 
-	public void deleteMap(Map map) {
-		mapRepository.delete(map);
+	public List<Map> getPublicMapsByUserId(String userId) {
+		return mapRepository.findByUserIdAndPblc(userId, 1);
 	}
 
-	public void deleteMapById(Integer id) {
-		Map map = getMapById(id);
-		mapRepository.delete(map);
-	}
-
-	public void updateMap(Integer id, Map map) {
+	public void updateMap(int id, @Valid Map map) {
 		Map rtndMap = getMapById(id);
 		rtndMap.setUserId(map.getUserId());
-		rtndMap.setTitle(map.getTitle());
+		rtndMap.setName(map.getName());
 		rtndMap.setPblc(map.getPblc());
 
 		mapRepository.save(rtndMap);
+	}
+
+	public void createMap(@Valid Map map) {
+		mapRepository.save(map);
+	}
+
+	public void deleteMap(@Valid Map map) {
+		mapRepository.delete(map);
+	}
+
+	public void deleteMapById(int id) {
+		Map map = getMapById(id);
+		mapRepository.delete(map);
 	}
 
 }
