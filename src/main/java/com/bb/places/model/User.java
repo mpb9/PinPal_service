@@ -1,5 +1,6 @@
 package com.bb.places.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.bb.places.util.RegExConstants;
@@ -19,6 +20,7 @@ import jakarta.validation.constraints.Pattern;
 @Table(name = "USER", schema = "PUBLIC")
 public class User implements Serializable {
 
+	@Serial
 	@Transient
 	private static final long serialVersionUID = 1L;
 
@@ -118,17 +120,17 @@ public class User implements Serializable {
 		strBld.append("\n");
 		strBld.append("***** USER *****");
 		strBld.append("\n");
-		strBld.append("ID: " + this.id);
+		strBld.append("ID: ").append(this.id);
 		strBld.append("\n");
-		strBld.append("NAME: " + this.name);
+		strBld.append("NAME: ").append(this.name);
 		strBld.append("\n");
-		strBld.append("EMAIL: " + this.email);
+		strBld.append("EMAIL: ").append(this.email);
 		strBld.append("\n");
-		strBld.append("PASSWORD: " + this.password);
+		strBld.append("PASSWORD: ").append(this.password);
 		strBld.append("\n");
-		strBld.append("PBLC: " + this.pblc);
+		strBld.append("PBLC: ").append(this.pblc);
 		strBld.append("\n");
-		strBld.append("ABOUT: " + this.about);
+		strBld.append("ABOUT: ").append(this.about);
 		strBld.append("\n");
 		strBld.append("***** END USER *****");
 

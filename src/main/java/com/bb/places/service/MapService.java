@@ -21,7 +21,7 @@ import jakarta.validation.constraints.Pattern;
 @Validated
 public class MapService {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	private static final Logger logger = LoggerFactory.getLogger(MapService.class);
 
 	@Autowired
 	private MapRepository mapRepository;
@@ -38,13 +38,13 @@ public class MapService {
 		return mapRepository.findByPblc(1);
 	}
 
-	public List<Map> getAllMapsByUserId(@Pattern(regexp = RegExConstants.VALID_USER_ID) String userId) {
+	public List<Map> getAllMapsByUserId(@NotBlank String userId) {
 		logger.info("Entering getAllMapsByUserId...");
 
 		return mapRepository.findByUserId(userId);
 	}
 
-	public List<Map> getPublicMapsByUserId(@Pattern(regexp = RegExConstants.VALID_USER_ID) String userId) {
+	public List<Map> getPublicMapsByUserId(@NotBlank String userId) {
 		logger.info("Entering getPublicMapsByUserId...");
 
 		return mapRepository.findByUserIdAndPblc(userId, 1);
@@ -62,7 +62,7 @@ public class MapService {
 		return mapRepository.findByIdAndPblc(id, 1);
 	}
 
-	public int getCountMapsByUserId(@Pattern(regexp = RegExConstants.VALID_USER_ID) String userId) {
+	public int getCountMapsByUserId(@NotBlank String userId) {
 		logger.info("Entering getCountMapsByUserId...");
 
 		return mapRepository.countByUserId(userId);

@@ -1,5 +1,6 @@
 package com.bb.places.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.bb.places.util.RegExConstants;
@@ -19,6 +20,7 @@ import jakarta.validation.constraints.Pattern;
 @Table(name = "MAP", schema = "PUBLIC")
 public class Map implements Serializable {
 
+	@Serial
 	@Transient
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +30,7 @@ public class Map implements Serializable {
 	private String id;
 
 	@NotBlank
-	@Pattern(regexp = RegExConstants.VALID_USER_ID)
+	// @Pattern(regexp = RegExConstants.VALID_USER_ID)
 	@Column(name = "USER_ID", nullable = false, length = 24)
 	private String userId;
 
@@ -107,15 +109,15 @@ public class Map implements Serializable {
 		strBld.append("\n");
 		strBld.append("***** MAP *****");
 		strBld.append("\n");
-		strBld.append("ID: " + this.id);
+		strBld.append("ID: ").append(this.id);
 		strBld.append("\n");
-		strBld.append("USER_ID: " + this.userId);
+		strBld.append("USER_ID: ").append(this.userId);
 		strBld.append("\n");
-		strBld.append("NAME: " + this.name);
+		strBld.append("NAME: ").append(this.name);
 		strBld.append("\n");
-		strBld.append("PBLC: " + this.pblc);
+		strBld.append("PBLC: ").append(this.pblc);
 		strBld.append("\n");
-		strBld.append("ABOUT: " + this.about);
+		strBld.append("ABOUT: ").append(this.about);
 		strBld.append("\n");
 		strBld.append("***** END MAP *****");
 

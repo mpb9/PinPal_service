@@ -33,7 +33,7 @@ import jakarta.validation.constraints.Pattern;
 @Validated
 public class MapController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MapController.class);
 
 	@Autowired
 	private MapService mapService;
@@ -63,7 +63,7 @@ public class MapController {
 
 	@GetMapping(name = "Get All Maps By User ID", value = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Map>> getAllMapsByUserId(
-			@PathVariable @Pattern(regexp = RegExConstants.VALID_USER_ID) String userId) {
+			@PathVariable @NotBlank String userId) {
 		logger.info("Entering getAllMapsByUserId...");
 
 		List<Map> mapList = mapService.getAllMapsByUserId(userId);
@@ -75,7 +75,7 @@ public class MapController {
 
 	@GetMapping(name = "Get Public Maps By User ID", value = "/pub/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Map>> getPublicMapsByUserId(
-			@PathVariable @Pattern(regexp = RegExConstants.VALID_USER_ID) String userId) {
+			@PathVariable @NotBlank String userId) {
 		logger.info("Entering getPublicMapsByUserId...");
 
 		List<Map> mapList = mapService.getPublicMapsByUserId(userId);
@@ -128,7 +128,7 @@ public class MapController {
 
 	@PostMapping(name = "Create Basic Map", value = "/user/{userId}")
 	public ResponseEntity<String> createMapBasic(
-			@PathVariable @Pattern(regexp = RegExConstants.VALID_USER_ID) String userId,
+			@PathVariable @NotBlank String userId,
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "pblc", required = true) int pblc) {
 		logger.info("Entering createMapBasic...");
