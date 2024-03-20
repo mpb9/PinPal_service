@@ -2,9 +2,10 @@ package com.bb.places.model;
 
 import java.io.Serializable;
 
+import com.bb.places.util.RegExConstants;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "MAP", schema = "PUBLIC")
@@ -21,13 +23,21 @@ public class Map implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
-	@Column(name = "ID", nullable = false)
-	private int id;
+	@NotBlank
+	@Column(name = "ID", nullable = false, length = 32)
+	private String id;
 
 	@NotBlank
-	@Column(name = "USER_ID", nullable = false, length = 32)
+	@Pattern(regexp = RegExConstants.VALID_USER_ID)
+	@Column(name = "USER_ID", nullable = false, length = 24)
 	private String userId;
+
+	@NotBlank
+	@Column(name = "NAME", nullable = false, length = 32)
+	private String name;
+
+	@Column(name = "ABOUT", length = 255)
+	private String about;
 
 	@Min(0)
 	@Max(1)
@@ -35,15 +45,12 @@ public class Map implements Serializable {
 	@Column(name = "PBLC", nullable = false)
 	private int pblc;
 
-	@NotBlank
-	@Column(name = "NAME", nullable = false, length = 64)
-	private String name;
-
-	@Column(name = "ABOUT", length = 255)
-	private String about;
-
-	public int getId() {
+	public String getId() {
 		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getUserId() {
@@ -62,6 +69,14 @@ public class Map implements Serializable {
 		this.name = name;
 	}
 
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
+	}
+
 	public int getPblc() {
 		return pblc;
 	}
@@ -70,12 +85,9 @@ public class Map implements Serializable {
 		this.pblc = pblc;
 	}
 
-	public String getAbout() {
-		return about;
-	}
-
-	public void setAbout(String about) {
-		this.about = about;
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
 	}
 
 	@Override
@@ -85,7 +97,7 @@ public class Map implements Serializable {
 
 		Map that = (Map) o;
 
-		return that.getId() == this.id;
+		return that.getId().equals(this.id);
 	}
 
 	@Override

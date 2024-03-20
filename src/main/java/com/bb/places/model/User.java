@@ -2,7 +2,7 @@ package com.bb.places.model;
 
 import java.io.Serializable;
 
-import com.bb.places.util.RegExpConstants;
+import com.bb.places.util.RegExConstants;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +12,7 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
@@ -22,8 +23,8 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Pattern(regexp = RegExpConstants.ALPHA_NUMERIC_STRING)
-	@Column(name = "ID", nullable = false, length = 32)
+	@Pattern(regexp = RegExConstants.VALID_USER_ID)
+	@Column(name = "ID", nullable = false, length = 24)
 	private String id;
 
 	@NotBlank
@@ -31,20 +32,21 @@ public class User implements Serializable {
 	private String name;
 
 	@NotBlank
-	@Column(name = "EMAIL", nullable = false, length = 64)
+	@Column(name = "EMAIL", nullable = false, length = 32)
 	private String email;
 
 	@NotBlank
 	@Column(name = "PASSWORD", nullable = false, length = 32)
 	private String password;
 
-	@Min(0)
-	@Max(1)
-	@Column(name = "PBLC", nullable = false)
-	private int pblc;
-
 	@Column(name = "ABOUT", length = 255)
 	private String about;
+
+	@Min(0)
+	@Max(1)
+	@NotNull
+	@Column(name = "PBLC", nullable = false)
+	private int pblc;
 
 	public String getId() {
 		return id;
@@ -78,20 +80,20 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public int getPblc() {
-		return pblc;
-	}
-
-	public void setPblc(int pblc) {
-		this.pblc = pblc;
-	}
-
 	public String getAbout() {
 		return about;
 	}
 
 	public void setAbout(String about) {
 		this.about = about;
+	}
+
+	public int getPblc() {
+		return pblc;
+	}
+
+	public void setPblc(int pblc) {
+		this.pblc = pblc;
 	}
 
 	@Override

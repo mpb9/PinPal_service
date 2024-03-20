@@ -10,10 +10,11 @@ import org.springframework.validation.annotation.Validated;
 
 import com.bb.places.model.User;
 import com.bb.places.repository.UserRepository;
-import com.bb.places.util.RegExpConstants;
+import com.bb.places.util.RegExConstants;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 @Service
@@ -26,7 +27,7 @@ public class UserService {
 	private UserRepository userRepository;
 
 	public List<User> getAllUsers() {
-		logger.info("Entering UserService.getAllUsers ...");
+		logger.info("Entering UserService.getAllUsers...");
 
 		return userRepository.findAllByOrderById();
 	}
@@ -35,27 +36,27 @@ public class UserService {
 		return userRepository.findByPblc(1);
 	}
 
-	public User getUserById(@Pattern(regexp = RegExpConstants.ALPHA_NUMERIC_STRING) String id) {
-		logger.info("Entering UserService.getUserById ...");
+	public User getUserById(@Pattern(regexp = RegExConstants.VALID_USER_ID) String id) {
+		logger.info("Entering UserService.getUserById...");
 
 		return userRepository.findById(id).get();
 	}
 
-	public User getUserByEmailAndPassword(String email, String password) {
-		logger.info("Entering UserService.getUserByEmailAndPassword ...");
+	public User getUserByEmailAndPassword(@NotBlank String email, @NotBlank String password) {
+		logger.info("Entering UserService.getUserByEmailAndPassword...");
 
 		return userRepository.findByEmailAndPassword(email, password);
 	}
 
-	public List<User> getUsersByName(String name) {
-		logger.info("Entering UserService.getUsersByName ...");
+	public List<User> getUsersByName(@NotBlank String name) {
+		logger.info("Entering UserService.getUsersByName...");
 
 		return userRepository.findByName(name);
 	}
 
 	@Transactional
-	public void updateUser(@Pattern(regexp = RegExpConstants.ALPHA_NUMERIC_STRING) String id, @Valid User user) {
-		logger.info("Entering UserService.updateUser ...");
+	public void updateUser(@Pattern(regexp = RegExConstants.VALID_USER_ID) String id, @Valid User user) {
+		logger.info("Entering UserService.updateUser...");
 
 		User rtndUser = getUserById(id);
 		rtndUser.setName(user.getName());
@@ -69,7 +70,7 @@ public class UserService {
 
 	@Transactional
 	public void createUser(@Valid User user) {
-		logger.info("Entering UserService.createUser ...");
+		logger.info("Entering UserService.createUser...");
 
 		if (userRepository.existsById(user.getId()))
 			updateUser(user.getId(), user);
@@ -82,13 +83,6 @@ public class UserService {
 	public void deleteUser(@Valid User user) {
 		if (userRepository.existsById(user.getId()))
 			userRepository.delete(user);
-	}
-
-	@Transactional
-	public void deleteUserById(@Pattern(regexp = RegExpConstants.ALPHA_NUMERIC_STRING) String id) {
-		if (userRepository.existsById(id))
-			userRepository.deleteById(id);
-
 	}
 
 }

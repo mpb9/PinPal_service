@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.5</version>
+		<version>3.2.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -18,8 +18,7 @@
 	<description>Places Service</description>
 
 	<properties>
-		<java.version>17</java.version>
-		
+		<java.version>21</java.version>
 	</properties>
 
 	<dependencies>
@@ -68,7 +67,7 @@
 		<dependency>
 			<groupId>net.snowflake</groupId>
 			<artifactId>snowflake-jdbc</artifactId>
-			<version>3.9.2</version>
+			<version>3.14.1</version>
 		</dependency>
 		
 	</dependencies>

@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.bb.places.model.Map;
 
 @Repository
-public interface MapRepository extends CrudRepository<Map, Integer> {
+public interface MapRepository extends CrudRepository<Map, String> {
+
+	Map findByIdAndPblc(String id, int pblc);
 
 	List<Map> findAllByOrderById();
 
@@ -17,5 +19,7 @@ public interface MapRepository extends CrudRepository<Map, Integer> {
 	List<Map> findByUserId(String userId);
 
 	List<Map> findByUserIdAndPblc(String userId, int pblc);
+
+	int countByUserId(String userId);
 
 }
