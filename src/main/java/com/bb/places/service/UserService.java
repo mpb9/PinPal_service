@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -64,6 +66,7 @@ public class UserService {
 		rtndUser.setPassword(user.getPassword());
 		rtndUser.setPblc(user.getPblc());
 		rtndUser.setAbout(user.getAbout());
+		rtndUser.setDefaultIcon(user.getDefaultIcon());
 
 		userRepository.save(rtndUser);
 	}
@@ -76,13 +79,24 @@ public class UserService {
 			updateUser(user.getId(), user);
 		else
 			userRepository.save(user);
-
 	}
 
 	@Transactional
 	public void deleteUser(@Valid User user) {
+		logger.info("Entering UserService.deleteUser...");
 		if (userRepository.existsById(user.getId()))
 			userRepository.delete(user);
+	}
+
+	public void validateUser(@Valid User user) {
+		logger.info("Entering UserService.validateUser...");
+		User userEnt = this.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
+
+		logger.info("UserEnt: {}", userEnt);
+		logger.info("User: {}", user);
+		if (!userEnt.equals(user)) {
+			throw new RuntimeException("Unauthorized");
+		}
 	}
 
 }

@@ -9,14 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.bb.places.model.User;
 import com.bb.places.service.UserService;
@@ -27,6 +20,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/users")
 @Validated
 public class UserController {
@@ -37,6 +31,39 @@ public class UserController {
 	private UserService userService;
 
 // GET REQUESTS
+
+	@GetMapping(name = "Get User By ID", value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> getUserById(@PathVariable @Pattern(regexp = RegExConstants.VALID_USER_ID) String id) {
+		logger.info("Entering UserController.getUserById...");
+
+		User user = userService.getUserById(id);
+
+		logger.info("\nUser: {}", user);
+
+		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+
+	@GetMapping(name = "Get User By Email And Password", value = "/email/{email}/password/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> getUserByEmailAndPassword(@PathVariable @NotNull String email,
+			@PathVariable @NotNull String password) {
+		logger.info("Entering UserController.getUserByEmailAndPassword...");
+
+		User user = userService.getUserByEmailAndPassword(email, password);
+
+		logger.info("\nUser: {}", user);
+
+		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+	@GetMapping(name = "Get Users By Name", value = "/name/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<User>> getUsersByName(@PathVariable @NotNull String name) {
+		logger.info("Entering UserController.getUsersByName...");
+
+		List<User> userList = userService.getUsersByName(name);
+
+		logger.info("\nUsers: {}", userList);
+
+		return new ResponseEntity<>(userList, HttpStatus.OK);
+	}
 	@GetMapping(name = "Get All Users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<User>> getAllUsers() {
 		logger.info("Entering UserController.getAllUsers...");
@@ -48,7 +75,7 @@ public class UserController {
 		return new ResponseEntity<>(userList, HttpStatus.OK);
 	}
 
-	@GetMapping(name = "Get Public Users", value = "/pub", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(name = "Get Public Users", value = "/pblc", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<User>> getPublicUsers() {
 		logger.info("Entering UserController.getPublicUsers...");
 

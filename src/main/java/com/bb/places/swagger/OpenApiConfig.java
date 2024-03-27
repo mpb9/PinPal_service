@@ -1,5 +1,6 @@
 package com.bb.places.swagger;
 
+import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -14,9 +15,11 @@ public class OpenApiConfig {
         return new OpenAPI()
             .info(new Info()
                 .title("Places API")
-                .version("1.0")
                 .description("Places API for managing users and maps")
+                .version("1.0")
                 .termsOfService("http://swagger.io/terms/")
-                .license(new License().name("Apache 2.0").url("http://springdoc.org")));
+                .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+            .externalDocs(new ExternalDocumentation()
+                .description("Michael Beebe, michaelbeebe1031@gmail.com, <website>"));
     }
 }

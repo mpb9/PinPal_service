@@ -50,6 +50,10 @@ public class User implements Serializable {
 	@Column(name = "PBLC", nullable = false)
 	private int pblc;
 
+	@Column(name = "DEFAULT_ICON", length = 255)
+	private String defaultIcon;
+	// DEFAULT ICON (DEFAULT_ICON) = icon.name + ' ' + icon.color + ' ' + icon.style + ' ' + icon.number
+
 	public String getId() {
 		return id;
 	}
@@ -98,6 +102,14 @@ public class User implements Serializable {
 		this.pblc = pblc;
 	}
 
+	public void setDefaultIcon(String defaultIcon) {
+		this.defaultIcon = defaultIcon;
+	}
+	public String getDefaultIcon() {
+		return defaultIcon;
+	}
+
+
 	@Override
 	public int hashCode() {
 		return id != null ? id.hashCode() : 0;
@@ -132,7 +144,10 @@ public class User implements Serializable {
 		strBld.append("\n");
 		strBld.append("ABOUT: ").append(this.about);
 		strBld.append("\n");
+		strBld.append("DEFAULT_ICON: ").append(this.defaultIcon);
+		strBld.append("\n");
 		strBld.append("***** END USER *****");
+		strBld.append("\n");
 
 		return strBld.toString();
 	}

@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.info.License;
 
 @OpenAPIDefinition(
         info = @Info(
+                title = "Places API",
                 description = "Places API for managing app resources",
                 version = "1.0",
-                title = "Places API",
-                contact = @Contact(name = "Michael Beebe", email = "michaelbeebe1031@gmail.com"),
-                license = @License(name = "Apache 2.0", url = "http://springdoc.org")
+                license = @License(name = "Apache 2.0", url = "http://springdoc.org"),
+                contact = @Contact(name = "Michael Beebe", email = "michaelbeebe1031@gmail.com", url = "")
         )
 )
 public interface ApiDocumentationConfig {

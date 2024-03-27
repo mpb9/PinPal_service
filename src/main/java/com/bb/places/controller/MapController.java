@@ -2,6 +2,8 @@ package com.bb.places.controller;
 
 import java.util.List;
 
+import com.bb.places.model.User;
+import com.bb.places.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.bb.places.model.Map;
 import com.bb.places.service.MapService;
@@ -29,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/maps")
 @Validated
 public class MapController {
@@ -37,6 +32,9 @@ public class MapController {
 
 	@Autowired
 	private MapService mapService;
+
+	@Autowired
+	private UserService userService;
 
 // GET REQUESTS
 	@GetMapping(name = "Get All Maps", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +48,7 @@ public class MapController {
 		return new ResponseEntity<>(mapList, HttpStatus.OK);
 	}
 
-	@GetMapping(name = "Get Public Maps", value = "/pub", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(name = "Get Public Maps", value = "/pblc", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Map>> getPublicMaps() {
 		logger.info("Entering getPublicMaps...");
 
@@ -73,7 +71,7 @@ public class MapController {
 		return new ResponseEntity<>(mapList, HttpStatus.OK);
 	}
 
-	@GetMapping(name = "Get Public Maps By User ID", value = "/pub/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(name = "Get Public Maps By User ID", value = "/pblc/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Map>> getPublicMapsByUserId(
 			@PathVariable @NotBlank String userId) {
 		logger.info("Entering getPublicMapsByUserId...");
@@ -96,7 +94,7 @@ public class MapController {
 		return new ResponseEntity<>(mapEnt, HttpStatus.OK);
 	}
 
-	@GetMapping(name = "Get Public Map By ID", value = "/pub/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(name = "Get Public Map By ID", value = "/pblc/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map> getPublicMapById(@PathVariable @NotBlank String id) {
 		logger.info("Entering getPublicMapById...");
 
@@ -147,11 +145,14 @@ public class MapController {
 	}
 
 // DELETE REQUESTS
-	@DeleteMapping(name = "Delete Map")
-	public ResponseEntity<String> deleteMap(@Valid @NotNull @RequestBody Map map) {
+	@DeleteMapping(name = "Delete Map", value = "/{id}")
+	public ResponseEntity<String> deleteMap(@PathVariable @NotBlank String id,
+			@Valid @NotNull @RequestBody User user) {
 		logger.info("Entering deleteMap...");
 
-		mapService.deleteMap(map);
+		userService.validateUser(user);
+
+		mapService.deleteMap( mapService.getMapById(id));
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 }
