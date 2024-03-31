@@ -2,6 +2,7 @@ package com.bb.places.controller;
 
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class UserController {
 // GET REQUESTS
 
 	@GetMapping(name = "Get User By ID", value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<User> getUserById(@PathVariable @Pattern(regexp = RegExConstants.VALID_USER_ID) String id) {
+	public ResponseEntity<User> getUserById(@PathVariable @NotBlank String id) {
 		logger.info("Entering UserController.getUserById...");
 
 		User user = userService.getUserById(id);
@@ -89,7 +90,7 @@ public class UserController {
 // PUT REQUESTS
 	@PutMapping(name = "Update User By ID", value = "/{id}")
 	public ResponseEntity<String> updateUserById(
-			@PathVariable @Pattern(regexp = RegExConstants.VALID_USER_ID) String id,
+			@PathVariable @NotBlank String id,
 			@Valid @NotNull @RequestBody User user) {
 		logger.info("Entering UserController.updateUser...");
 

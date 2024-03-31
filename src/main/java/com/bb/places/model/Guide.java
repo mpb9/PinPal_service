@@ -1,24 +1,28 @@
 package com.bb.places.model;
 
-import java.io.Serial;
-import java.io.Serializable;
-
-import com.bb.places.util.RegExConstants;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
+import java.io.Serial;
+import java.io.Serializable;
+
+/* create or replace TABLE PLACES.PUBLIC.GUIDE (
+	ID VARCHAR(32) NOT NULL,
+	USER_ID VARCHAR(24) NOT NULL,
+	NAME VARCHAR(32) NOT NULL,
+	ABOUT VARCHAR(255),
+	PBLC NUMBER(1,0) NOT NULL,
+	DEFAULT_ZOOM NUMBER(2,0) NOT NULL,
+	DEFAULT_LAT NUMBER(9,6) NOT NULL,
+	DEFAULT_LNG NUMBER(9,6) NOT NULL,
+	primary key (ID)
+); */
 @Entity
-@Table(name = "MAP", schema = "PUBLIC")
-public class Map implements Serializable {
+@Table(name = "GUIDE", schema = "PUBLIC")
+public class Guide implements Serializable {
 
 	@Serial
 	@Transient
@@ -30,7 +34,6 @@ public class Map implements Serializable {
 	private String id;
 
 	@NotBlank
-	// @Pattern(regexp = RegExConstants.VALID_USER_ID)
 	@Column(name = "USER_ID", nullable = false, length = 24)
 	private String userId;
 
@@ -41,6 +44,24 @@ public class Map implements Serializable {
 	@Column(name = "ABOUT", length = 255)
 	private String about;
 
+
+	@Min(0)
+	@Max(20)
+	@NotNull
+	@Column(name = "DEFAULT_ZOOM", nullable = false)
+	private Long defaultZoom;
+
+	@Min(-90)
+	@Max(90)
+	@NotNull
+	@Column(name = "DEFAULT_LAT", nullable = false)
+	private Long defaultLat;
+
+	@Min(-90)
+	@Max(90)
+	@NotNull
+	@Column(name = "DEFAULT_LNG", nullable = false)
+	private Long defaultLng;
 	@Min(0)
 	@Max(1)
 	@NotNull
@@ -79,6 +100,30 @@ public class Map implements Serializable {
 		this.about = about;
 	}
 
+	public Long getDefaultZoom() {
+		return defaultZoom;
+	}
+
+	public void setDefaultZoom(Long defaultZoom) {
+		this.defaultZoom = defaultZoom;
+	}
+
+	public Long getDefaultLat() {
+		return defaultLat;
+	}
+
+	public void setDefaultLat(Long defaultLat) {
+		this.defaultLat = defaultLat;
+	}
+
+	public Long getDefaultLng() {
+		return defaultLng;
+	}
+
+	public void setDefaultLng(Long defaultLng) {
+		this.defaultLng = defaultLng;
+	}
+
 	public int getPblc() {
 		return pblc;
 	}
@@ -97,7 +142,7 @@ public class Map implements Serializable {
 		if (o == null || this.getClass() != o.getClass())
 			return false;
 
-		Map that = (Map) o;
+		Guide that = (Guide) o;
 
 		return that.getId().equals(this.id);
 	}
@@ -107,7 +152,7 @@ public class Map implements Serializable {
 		StringBuilder strBld = new StringBuilder();
 
 		strBld.append("\n");
-		strBld.append("***** MAP *****");
+		strBld.append("***** GUIDE *****");
 		strBld.append("\n");
 		strBld.append("ID: ").append(this.id);
 		strBld.append("\n");
@@ -119,7 +164,13 @@ public class Map implements Serializable {
 		strBld.append("\n");
 		strBld.append("ABOUT: ").append(this.about);
 		strBld.append("\n");
-		strBld.append("***** END MAP *****");
+		strBld.append("DEFAULT_ZOOM: ").append(this.defaultZoom);
+		strBld.append("\n");
+		strBld.append("DEFAULT_LAT: ").append(this.defaultLat);
+		strBld.append("\n");
+		strBld.append("DEFAULT_LNG: ").append(this.defaultLng);
+		strBld.append("\n");
+		strBld.append("***** END GUIDE *****");
 
 		return strBld.toString();
 	}

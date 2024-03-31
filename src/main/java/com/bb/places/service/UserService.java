@@ -38,7 +38,7 @@ public class UserService {
 		return userRepository.findByPblc(1);
 	}
 
-	public User getUserById(@Pattern(regexp = RegExConstants.VALID_USER_ID) String id) {
+	public User getUserById(@NotBlank String id) {
 		logger.info("Entering UserService.getUserById...");
 
 		return userRepository.findById(id).get();
@@ -57,7 +57,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(@Pattern(regexp = RegExConstants.VALID_USER_ID) String id, @Valid User user) {
+	public void updateUser(@NotBlank String id, @Valid User user) {
 		logger.info("Entering UserService.updateUser...");
 
 		User rtndUser = getUserById(id);
@@ -66,7 +66,6 @@ public class UserService {
 		rtndUser.setPassword(user.getPassword());
 		rtndUser.setPblc(user.getPblc());
 		rtndUser.setAbout(user.getAbout());
-		rtndUser.setDefaultIcon(user.getDefaultIcon());
 
 		userRepository.save(rtndUser);
 	}

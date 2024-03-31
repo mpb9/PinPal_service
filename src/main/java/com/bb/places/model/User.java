@@ -1,21 +1,22 @@
 package com.bb.places.model;
 
+import com.bb.places.util.RegExConstants;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
 import java.io.Serial;
 import java.io.Serializable;
 
-import com.bb.places.util.RegExConstants;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-
+/* create or replace TABLE PLACES.PUBLIC.USER (
+	ID VARCHAR(24) NOT NULL,
+	NAME VARCHAR(32) NOT NULL,
+	EMAIL VARCHAR(32) NOT NULL,
+	PASSWORD VARCHAR(32) NOT NULL,
+	ABOUT VARCHAR(255),
+	PBLC NUMBER(1,0) NOT NULL,
+	unique (EMAIL),
+	primary key (ID)
+); */
 @Entity
 @Table(name = "USER", schema = "PUBLIC")
 public class User implements Serializable {
@@ -25,7 +26,6 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Pattern(regexp = RegExConstants.VALID_USER_ID)
 	@Column(name = "ID", nullable = false, length = 24)
 	private String id;
 
@@ -49,10 +49,6 @@ public class User implements Serializable {
 	@NotNull
 	@Column(name = "PBLC", nullable = false)
 	private int pblc;
-
-	@Column(name = "DEFAULT_ICON", length = 255)
-	private String defaultIcon;
-	// DEFAULT ICON (DEFAULT_ICON) = icon.name + ' ' + icon.color + ' ' + icon.style + ' ' + icon.number
 
 	public String getId() {
 		return id;
@@ -102,14 +98,6 @@ public class User implements Serializable {
 		this.pblc = pblc;
 	}
 
-	public void setDefaultIcon(String defaultIcon) {
-		this.defaultIcon = defaultIcon;
-	}
-	public String getDefaultIcon() {
-		return defaultIcon;
-	}
-
-
 	@Override
 	public int hashCode() {
 		return id != null ? id.hashCode() : 0;
@@ -143,8 +131,6 @@ public class User implements Serializable {
 		strBld.append("PBLC: ").append(this.pblc);
 		strBld.append("\n");
 		strBld.append("ABOUT: ").append(this.about);
-		strBld.append("\n");
-		strBld.append("DEFAULT_ICON: ").append(this.defaultIcon);
 		strBld.append("\n");
 		strBld.append("***** END USER *****");
 		strBld.append("\n");
