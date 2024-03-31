@@ -6,14 +6,16 @@ import jakarta.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 
-/*create or replace TABLE PLACES.PUBLIC.ICON (
+/*
+create or replace TABLE PINPAL.PUBLIC.ICON (
 	ID VARCHAR(98) NOT NULL,
 	PIN_COLL_ID VARCHAR(65) NOT NULL,
 	NAME VARCHAR(32) NOT NULL,
 	COLOR VARCHAR(7) NOT NULL,
 	STYLE VARCHAR(7) NOT NULL,
 	primary key (ID)
-);*/
+);
+*/
 @Entity
 @Table(name = "ICON", schema = "PUBLIC")
 public class Icon implements Serializable {
@@ -98,7 +100,6 @@ public class Icon implements Serializable {
     @Override
     public String toString(){
         StringBuilder strBld = new StringBuilder();
-
         strBld.append("\n");
         strBld.append("***** ICON *****");
         strBld.append("\n");
@@ -113,9 +114,7 @@ public class Icon implements Serializable {
         strBld.append("STYLE: ").append(this.style);
         strBld.append("\n");
         strBld.append("***** END ICON *****");
-
         return strBld.toString();
-
     }
 
 

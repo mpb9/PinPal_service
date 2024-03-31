@@ -2,7 +2,6 @@ package com.bb.places.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,7 +11,7 @@ import java.io.Serializable;
 	PLACE_ID VARCHAR(32) NOT NULL,
 	PIN_COLL_ID VARCHAR(65) NOT NULL,
 	NAME VARCHAR(32) NOT NULL,
-	ADDRESS VARCHAR(255),
+	ADDRESS VARCHAR(256),
 	ABOUT VARCHAR(255),
 	LAT NUMBER(9,6) NOT NULL,
 	LNG NUMBER(9,6) NOT NULL,
@@ -28,11 +27,11 @@ public class Pin implements Serializable {
 
     @Id
     @NotBlank
-    @Column(name = "ID", nullable = false, length = 98)
+    @Column(name = "ID", nullable = false, length = 512)
     private String id;
 
     @NotBlank
-    @Column(name = "PLACE_ID", nullable = false, length = 32)
+    @Column(name = "PLACE_ID", nullable = false, length = 512)
     private String placeId;
 
     @NotBlank
@@ -43,19 +42,11 @@ public class Pin implements Serializable {
     @Column(name = "NAME", nullable = false, length = 32)
     private String name;
 
-    @Column(name = "ADDRESS", length = 255)
-    private String address;
-
-    @Column(name = "ABOUT", length = 255)
+    @Column(name = "ABOUT", length = 256)
     private String about;
 
-    @NotNull
-    @Column(name = "LAT", nullable = false)
-    private Long lat;
-
-    @NotNull
-    @Column(name = "LNG", nullable = false)
-    private Long lng;
+    @Column(name = "PHOTO", length = 256)
+    private String photo;
 
     public String getId() {
         return id;
@@ -89,14 +80,6 @@ public class Pin implements Serializable {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getAbout() {
         return about;
     }
@@ -105,20 +88,12 @@ public class Pin implements Serializable {
         this.about = about;
     }
 
-    public Long getLat() {
-        return lat;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setLat(Long lat) {
-        this.lat = lat;
-    }
-
-    public Long getLng() {
-        return lng;
-    }
-
-    public void setLng(Long lng) {
-        this.lng = lng;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Override
@@ -137,7 +112,6 @@ public class Pin implements Serializable {
     @Override
     public String toString(){
         StringBuilder strBld = new StringBuilder();
-
         strBld.append("\n");
         strBld.append("***** PIN *****");
         strBld.append("\n");
@@ -149,16 +123,11 @@ public class Pin implements Serializable {
         strBld.append("\n");
         strBld.append("NAME: ").append(this.name);
         strBld.append("\n");
-        strBld.append("ADDRESS: ").append(this.address);
-        strBld.append("\n");
         strBld.append("ABOUT: ").append(this.about);
         strBld.append("\n");
-        strBld.append("LAT: ").append(this.lat);
-        strBld.append("\n");
-        strBld.append("LNG: ").append(this.lng);
+        strBld.append("PHOTO: ").append(this.photo);
         strBld.append("\n");
         strBld.append("***** END PIN *****");
-
         return strBld.toString();
     }
 }

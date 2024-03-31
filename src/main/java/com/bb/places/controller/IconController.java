@@ -79,30 +79,37 @@ public class IconController {
 
     // PUT REQUESTS
     @PutMapping(name = "Update Icon", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateIcon(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody Icon icon) {
+    public ResponseEntity<Icon> updateIcon(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody Icon icon) {
         logger.info("Entering updateIcon...");
 
         iconService.updateIcon(id, icon);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        Icon iconEnt = iconService.getIconById(icon.getId());
+
+        logger.info("\nIcon: {}", iconEnt);
+        return new ResponseEntity<>(iconEnt, HttpStatus.OK);
     }
 
     // POST REQUESTS
     @PostMapping(name = "Create Icon", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createIcon(@Valid @NotNull @RequestBody Icon icon) {
+    public ResponseEntity<Icon> createIcon(@Valid @NotNull @RequestBody Icon icon) {
         logger.info("Entering createIcon...");
 
         iconService.createIcon(icon);
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        Icon iconEnt = iconService.getIconById(icon.getId());
+
+        logger.info("\nIcon: {}", iconEnt);
+        return new ResponseEntity<>(iconEnt, HttpStatus.CREATED);
     }
 
     // DELETE REQUESTS
     @DeleteMapping(name = "Delete Icon", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteIcon(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody User user) {
+    public ResponseEntity<Void> deleteIcon(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody User user) {
         logger.info("Entering deleteIcon...");
 
         userService.validateUser(user);
-
         iconService.deleteIcon(iconService.getIconById(id));
-        return new ResponseEntity<>(null, HttpStatus.OK);
+
+         logger.info("\nIcon Deleted {}", id);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

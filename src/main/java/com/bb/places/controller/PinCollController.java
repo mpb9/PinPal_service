@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/api/pinColls")
+@RequestMapping("/api/pin-colls")
 @Validated
 public class PinCollController {
     private static final Logger logger = LoggerFactory.getLogger(PinCollController.class);
@@ -32,14 +32,13 @@ public class PinCollController {
     private UserService userService;
 
     // GET REQUESTS
-    @GetMapping(name = "Get All Pin Collections by User ID", value = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PinColl>> getAllPinCollsByUserId(@PathVariable @NotBlank String userId) {
-        logger.info("Entering getAllPinCollsByUserId...");
+    @GetMapping(name = "Get Pin Collections by User ID", value = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PinColl>> getPinCollsByUserId(@PathVariable @NotBlank String userId) {
+        logger.info("Entering getPinCollsByUserId...");
 
         List<PinColl> pinCollList = pinCollService.getPinCollsByUserId(userId);
 
         logger.info("\nPin Collections: {}", pinCollList);
-
         return new ResponseEntity<>(pinCollList, HttpStatus.OK);
     }
 
@@ -50,7 +49,6 @@ public class PinCollController {
         List<PinColl> pinCollList = pinCollService.getPinCollsByGuideId(guideId);
 
         logger.info("\nPin Collections: {}", pinCollList);
-
         return new ResponseEntity<>(pinCollList, HttpStatus.OK);
     }
 
@@ -58,43 +56,46 @@ public class PinCollController {
     public ResponseEntity<PinColl> getPinCollById(@PathVariable @NotBlank String id){
         logger.info("Entering getPinCollById...");
 
-        PinColl pinColl = pinCollService.getPinCollById(id);
+        PinColl pinCollEnt = pinCollService.getPinCollById(id);
 
-        logger.info("\nPin Collection: {}", pinColl);
-
-        return new ResponseEntity<>(pinColl, HttpStatus.OK);
+        logger.info("\nPin Collection: {}", pinCollEnt);
+        return new ResponseEntity<>(pinCollEnt, HttpStatus.OK);
     }
 
     // PUT REQUESTS
     @PutMapping(name = "Update Pin Collection", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updatePinColl(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody PinColl pinColl){
+    public ResponseEntity<PinColl> updatePinColl(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody PinColl pinColl){
         logger.info("Entering updatePinColl...");
 
         pinCollService.updatePinColl(id, pinColl);
+        PinColl pinCollEnt = pinCollService.getPinCollById(pinColl.getId());
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        logger.info("Pin Collection updated: {}", pinCollEnt);
+        return new ResponseEntity<>(pinCollEnt, HttpStatus.OK);
     }
 
     // POST REQUESTS
     @PostMapping(name = "Create Pin Collection", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createPinColl(@Valid @NotNull @RequestBody PinColl pinColl){
+    public ResponseEntity<PinColl> createPinColl(@Valid @NotNull @RequestBody PinColl pinColl){
         logger.info("Entering createPinColl...");
 
         pinCollService.createPinColl(pinColl);
+        PinColl pinCollEnt = pinCollService.getPinCollById(pinColl.getId());
 
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        logger.info("Pin Collection created: {}", pinCollEnt);
+        return new ResponseEntity<>(pinCollEnt, HttpStatus.CREATED);
     }
 
     // DELETE REQUESTS
     @DeleteMapping(name = "Delete Pin Collection", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deletePinColl(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody User user){
+    public ResponseEntity<Void> deletePinColl(@PathVariable @NotBlank String id, @Valid @NotNull @RequestBody User user){
         logger.info("Entering deletePinColl...");
 
         userService.validateUser(user);
-
         pinCollService.deletePinColl(pinCollService.getPinCollById(id));
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        logger.info("Pin Collection deleted: {}", id);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 }

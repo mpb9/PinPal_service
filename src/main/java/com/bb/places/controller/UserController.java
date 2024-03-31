@@ -1,8 +1,10 @@
 package com.bb.places.controller;
 
-import java.util.List;
-
+import com.bb.places.model.User;
+import com.bb.places.service.UserService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.bb.places.model.User;
-import com.bb.places.service.UserService;
-import com.bb.places.util.RegExConstants;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -31,8 +27,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-// GET REQUESTS
-
+	// GET REQUESTS
 	@GetMapping(name = "Get User By ID", value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> getUserById(@PathVariable @NotBlank String id) {
 		logger.info("Entering UserController.getUserById...");
@@ -88,31 +83,39 @@ public class UserController {
 	}
 
 // PUT REQUESTS
-	@PutMapping(name = "Update User By ID", value = "/{id}")
-	public ResponseEntity<String> updateUserById(
+	@PutMapping(name = "Update User By ID", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> updateUserById(
 			@PathVariable @NotBlank String id,
 			@Valid @NotNull @RequestBody User user) {
-		logger.info("Entering UserController.updateUser...");
+		logger.info("Entering UserController.updateUserById...");
 
 		userService.updateUser(id, user);
-		return new ResponseEntity<>(null, HttpStatus.OK);
+		User userEnt = userService.getUserById(user.getId());
+
+		logger.info("\nUser: {}", userEnt);
+		return new ResponseEntity<>(userEnt, HttpStatus.OK);
 	}
 
 // POST REQUESTS
-	@PostMapping(name = "Create User")
-	public ResponseEntity<String> createUser(@Valid @NotNull @RequestBody User user) {
+	@PostMapping(name = "Create User", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<User> createUser(@Valid @NotNull @RequestBody User user) {
 		logger.info("Entering UserController.createUser...");
 
 		userService.createUser(user);
-		return new ResponseEntity<>(null, HttpStatus.CREATED);
+		User userEnt = userService.getUserById(user.getId());
+
+		logger.info("\nUser: {}", userEnt);
+		return new ResponseEntity<>(userEnt, HttpStatus.CREATED);
 	}
 
 // DELETE REQUESTS
-	@DeleteMapping(name = "Delete User")
-	public ResponseEntity<String> deleteUser(@Valid @NotNull @RequestBody User user) {
+	@DeleteMapping(name = "Delete User", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Void> deleteUser(@Valid @NotNull @RequestBody User user) {
 		logger.info("Entering UserController.deleteUser...");
 
 		userService.deleteUser(user);
-		return new ResponseEntity<>(null, HttpStatus.OK);
+
+		logger.info("User deleted: {}", user);
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	}
 }

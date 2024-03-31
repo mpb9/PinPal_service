@@ -27,7 +27,7 @@ public class GuideController {
     private static final Logger logger = LoggerFactory.getLogger(GuideController.class);
 
     @Autowired
-    private GuideService GuideService;
+    private GuideService guideService;
 
     @Autowired
     private UserService userService;
@@ -37,10 +37,9 @@ public class GuideController {
     public ResponseEntity<List<Guide>> getAllGuides() {
         logger.info("Entering getAllGuides...");
 
-        List<Guide> GuideList = GuideService.getAllGuides();
+        List<Guide> GuideList = guideService.getAllGuides();
 
-        logger.info("\nGuides: {}", GuideList);
-
+        logger.info("\nGuideList: {}", GuideList);
         return new ResponseEntity<>(GuideList, HttpStatus.OK);
     }
 
@@ -48,22 +47,20 @@ public class GuideController {
     public ResponseEntity<List<Guide>> getPublicGuides() {
         logger.info("Entering getPublicGuides...");
 
-        List<Guide> GuideList = GuideService.getPublicGuides();
+        List<Guide> GuideList = guideService.getPublicGuides();
 
-        logger.info("\nGuides: {}", GuideList);
-
+        logger.info("\nGuideList: {}", GuideList);
         return new ResponseEntity<>(GuideList, HttpStatus.OK);
     }
 
     @GetMapping(name = "Get All Guides By User ID", value = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Guide>> getAllGuidesByUserId(
+    public ResponseEntity<List<Guide>> getGuidesByUserId(
             @PathVariable @NotBlank String userId) {
-        logger.info("Entering getAllGuidesByUserId...");
+        logger.info("Entering getGuidesByUserId...");
 
-        List<Guide> GuideList = GuideService.getAllGuidesByUserId(userId);
+        List<Guide> GuideList = guideService.getGuidesByUserId(userId);
 
-        logger.info("\nGuides: {}", GuideList);
-
+        logger.info("\nGuideList: {}", GuideList);
         return new ResponseEntity<>(GuideList, HttpStatus.OK);
     }
 
@@ -72,10 +69,9 @@ public class GuideController {
             @PathVariable @NotBlank String userId) {
         logger.info("Entering getPublicGuidesByUserId...");
 
-        List<Guide> GuideList = GuideService.getPublicGuidesByUserId(userId);
+        List<Guide> GuideList = guideService.getPublicGuidesByUserId(userId);
 
-        logger.info("\nGuides: {}", GuideList);
-
+        logger.info("\nGuideList: {}", GuideList);
         return new ResponseEntity<>(GuideList, HttpStatus.OK);
     }
 
@@ -83,9 +79,9 @@ public class GuideController {
     public ResponseEntity<Guide> getGuideById(@PathVariable @NotBlank String id) {
         logger.info("Entering getGuideById...");
 
-        Guide guideEnt = GuideService.getGuideById(id);
+        Guide guideEnt = guideService.getGuideById(id);
 
-        logger.info("\nGuide: {}", guideEnt);
+        logger.info("\nguideEnt: {}", guideEnt);
 
         return new ResponseEntity<>(guideEnt
                 , HttpStatus.OK);
@@ -96,9 +92,9 @@ public class GuideController {
         logger.info("Entering getPublicGuideById...");
 
         Guide guideEnt
-                = GuideService.getPublicGuideById(id);
+                = guideService.getPublicGuideById(id);
 
-        logger.info("\nGuide: {}", guideEnt
+        logger.info("\nguideEnt: {}", guideEnt
         );
 
         return new ResponseEntity<>(guideEnt
@@ -106,54 +102,40 @@ public class GuideController {
     }
 
     // PUT REQUESTS
-    @PutMapping(name = "Update Guide By ID", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateGuide(@PathVariable @NotBlank String id,
+    @PutMapping(name = "Update Guide", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Guide> updateGuide(@PathVariable @NotBlank String id,
                                                   @Valid @NotNull @RequestBody Guide guide) {
         logger.info("Entering updateGuide...");
 
-        GuideService.updateGuide(id, guide);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        guideService.updateGuide(id, guide);
+        Guide guideEnt = guideService.getGuideById(guide.getId());
+
+        logger.info("\nguideEnt: {}", guideEnt);
+        return new ResponseEntity<>(guideEnt, HttpStatus.OK);
     }
 
     // POST REQUESTS
     @PostMapping(name = "Create Guide", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createGuide(@Valid @NotNull @RequestBody Guide guide) {
+    public ResponseEntity<Guide> createGuide(@Valid @NotNull @RequestBody Guide guide) {
         logger.info("Entering createGuide...");
 
-        GuideService.createGuide(guide);
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
-    }
+        guideService.createGuide(guide);
+        Guide guideEnt = guideService.getGuideById(guide.getId());
 
-    @PostMapping(name = "Create Basic Guide", value = "/user/{userId}")
-    public ResponseEntity<String> createGuideBasic(
-            @PathVariable @NotBlank String userId,
-            @RequestParam(value = "name", required = true) String name,
-            @RequestParam(value = "pblc", required = true) int pblc) {
-        logger.info("Entering createGuideBasic...");
-
-        String GuideId = userId + "~" + (GuideService.getCountGuidesByUserId(userId) + 1);
-
-        Guide guideEnt = new Guide();
-        guideEnt.setId(GuideId);
-        guideEnt.setUserId(userId);
-        guideEnt.setName(name);
-        guideEnt.setAbout("");
-        guideEnt.setPblc(pblc);
-
-        GuideService.createGuide(guideEnt
-        );
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        logger.info("\nguideEnt: {}", guideEnt);
+        return new ResponseEntity<>(guideEnt, HttpStatus.CREATED);
     }
 
     // DELETE REQUESTS
     @DeleteMapping(name = "Delete Guide", value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteGuide(@PathVariable @NotBlank String id,
+    public ResponseEntity<Void> deleteGuide(@PathVariable @NotBlank String id,
                                               @Valid @NotNull @RequestBody User user) {
         logger.info("Entering deleteGuide...");
 
         userService.validateUser(user);
+        guideService.deleteGuide(guideService.getGuideById(id));
 
-        GuideService.deleteGuide(GuideService.getGuideById(id));
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        logger.info("\nGuide Deleted: {}", id);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

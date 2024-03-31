@@ -9,17 +9,20 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 
-/* create or replace TABLE PLACES.PUBLIC.GUIDE (
+//ID: USER_ID + "~" + NAME
+/*
+create or replace TABLE PINPAL.PUBLIC.GUIDE (
 	ID VARCHAR(32) NOT NULL,
 	USER_ID VARCHAR(24) NOT NULL,
 	NAME VARCHAR(32) NOT NULL,
-	ABOUT VARCHAR(255),
+	ABOUT VARCHAR(256),
 	PBLC NUMBER(1,0) NOT NULL,
 	DEFAULT_ZOOM NUMBER(2,0) NOT NULL,
-	DEFAULT_LAT NUMBER(9,6) NOT NULL,
+	DEFAULT_LAT NUMBER(8,6) NOT NULL,
 	DEFAULT_LNG NUMBER(9,6) NOT NULL,
 	primary key (ID)
-); */
+);
+*/
 @Entity
 @Table(name = "GUIDE", schema = "PUBLIC")
 public class Guide implements Serializable {
@@ -41,9 +44,14 @@ public class Guide implements Serializable {
 	@Column(name = "NAME", nullable = false, length = 32)
 	private String name;
 
-	@Column(name = "ABOUT", length = 255)
+	@Column(name = "ABOUT", length = 256)
 	private String about;
 
+	@Min(0)
+	@Max(1)
+	@NotNull
+	@Column(name = "PBLC", nullable = false)
+	private int pblc;
 
 	@Min(0)
 	@Max(20)
@@ -57,16 +65,12 @@ public class Guide implements Serializable {
 	@Column(name = "DEFAULT_LAT", nullable = false)
 	private Long defaultLat;
 
-	@Min(-90)
-	@Max(90)
+	@Min(-180)
+	@Max(180)
 	@NotNull
 	@Column(name = "DEFAULT_LNG", nullable = false)
 	private Long defaultLng;
-	@Min(0)
-	@Max(1)
-	@NotNull
-	@Column(name = "PBLC", nullable = false)
-	private int pblc;
+
 
 	public String getId() {
 		return id;
@@ -160,9 +164,9 @@ public class Guide implements Serializable {
 		strBld.append("\n");
 		strBld.append("NAME: ").append(this.name);
 		strBld.append("\n");
-		strBld.append("PBLC: ").append(this.pblc);
-		strBld.append("\n");
 		strBld.append("ABOUT: ").append(this.about);
+		strBld.append("\n");
+		strBld.append("PBLC: ").append(this.pblc);
 		strBld.append("\n");
 		strBld.append("DEFAULT_ZOOM: ").append(this.defaultZoom);
 		strBld.append("\n");

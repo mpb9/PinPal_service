@@ -6,14 +6,16 @@ import jakarta.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 
-/* create or replace TABLE PLACES.PUBLIC.PIN_COLL (
+/*
+create or replace TABLE PINPAL.PUBLIC.PIN_COLL (
 	ID VARCHAR(65) NOT NULL,
 	USER_ID VARCHAR(24) NOT NULL,
 	GUIDE_ID VARCHAR(32) NOT NULL,
 	ICON_ID VARCHAR(98) NOT NULL,
 	NAME VARCHAR(32) NOT NULL,
 	primary key (ID)
-); */
+);
+*/
 @Entity
 @Table(name = "PIN_COLL", schema = "PUBLIC")
 public class PinColl implements Serializable {
@@ -103,7 +105,6 @@ public class PinColl implements Serializable {
     @Override
     public String toString() {
         StringBuilder strBld = new StringBuilder();
-
         strBld.append("\n");
         strBld.append("***** PIN_COLL *****");
         strBld.append("\n");
@@ -118,7 +119,6 @@ public class PinColl implements Serializable {
         strBld.append("NAME: ").append(this.name);
         strBld.append("\n");
         strBld.append("***** END PIN_COLL *****");
-
         return strBld.toString();
     }
 }

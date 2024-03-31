@@ -1,22 +1,26 @@
 package com.bb.places.model;
 
-import com.bb.places.util.RegExConstants;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-/* create or replace TABLE PLACES.PUBLIC.USER (
+/*
+create or replace TABLE PINPAL.PUBLIC.USER (
 	ID VARCHAR(24) NOT NULL,
 	NAME VARCHAR(32) NOT NULL,
 	EMAIL VARCHAR(32) NOT NULL,
 	PASSWORD VARCHAR(32) NOT NULL,
-	ABOUT VARCHAR(255),
+	ABOUT VARCHAR(256),
 	PBLC NUMBER(1,0) NOT NULL,
 	unique (EMAIL),
 	primary key (ID)
-); */
+);
+*/
 @Entity
 @Table(name = "USER", schema = "PUBLIC")
 public class User implements Serializable {
@@ -41,7 +45,7 @@ public class User implements Serializable {
 	@Column(name = "PASSWORD", nullable = false, length = 32)
 	private String password;
 
-	@Column(name = "ABOUT", length = 255)
+	@Column(name = "ABOUT", length = 256)
 	private String about;
 
 	@Min(0)
@@ -126,7 +130,7 @@ public class User implements Serializable {
 		strBld.append("\n");
 		strBld.append("EMAIL: ").append(this.email);
 		strBld.append("\n");
-		strBld.append("PASSWORD: ").append(this.password);
+		strBld.append("PASSWORD: ").append("********");
 		strBld.append("\n");
 		strBld.append("PBLC: ").append(this.pblc);
 		strBld.append("\n");
